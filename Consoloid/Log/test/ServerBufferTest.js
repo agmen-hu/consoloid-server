@@ -1,12 +1,10 @@
-var
-  should = require("should"),
-  sinon = require("sinon");
-
 require("consoloid-framework/Consoloid/Log/StreamContainer");
 require("consoloid-framework/Consoloid/Log/Stream/Stream");
 require("consoloid-framework/Consoloid/Log/Stream/PeriodicallyForwardedBuffer");
+require('consoloid-framework/Consoloid/Test/UnitTest');
+
 require("../ServerBuffer");
-describe('Consoloid.Log.ServerBuffer', function(){
+describeUnitTest('Consoloid.Log.ServerBuffer', function(){
     var
     env,
     clock,
@@ -24,10 +22,8 @@ describe('Consoloid.Log.ServerBuffer', function(){
       subStream2;
 
     beforeEach(function(){
-      subStream1 = env.create('Consoloid.Log.Stream.Stream', {write:function(){}});
-      sinon.spy(subStream1, 'write');
-      subStream2 = env.create('Consoloid.Log.Stream.Stream', {write:function(){}});
-      sinon.spy(subStream2, 'write');
+      subStream1 = env.mock('Consoloid.Log.Stream.Stream');
+      subStream2 = env.mock('Consoloid.Log.Stream.Stream');
 
       stream.addStream(subStream1);
       stream.addStream(subStream2);

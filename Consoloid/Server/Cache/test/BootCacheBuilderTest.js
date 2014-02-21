@@ -1,10 +1,8 @@
-var should = require("should");
-var sinon = require("sinon");
-
 require('consoloid-framework/Consoloid/Base/DeepAssoc');
+require('consoloid-framework/Consoloid/Test/UnitTest');
 require('../NoBootCacheBuilder');
 require('../BootCacheBuilder');
-describe('Consoloid.Server.Cache.BootCacheBuilder', function(){
+describeUnitTest('Consoloid.Server.Cache.BootCacheBuilder', function(){
   var
     env,
     bootCacheBuilder;
@@ -300,10 +298,10 @@ describe('Consoloid.Server.Cache.BootCacheBuilder', function(){
 
         bootCacheBuilder.sessionID.should.be.false;
         bootCacheBuilder.state.should.be.eql(Consoloid.Server.Cache.BootCacheBuilder.BOOTED);
-        should.strictEqual(bootCacheBuilder.bootJavascript)
-        should.strictEqual(bootCacheBuilder.javascript)
-        should.strictEqual(bootCacheBuilder.templates)
-        should.strictEqual(bootCacheBuilder.classes)
+        (bootCacheBuilder.bootJavascript == undefined).should.be.true;
+        (bootCacheBuilder.javascript == undefined).should.be.true;
+        (bootCacheBuilder.templates == undefined).should.be.true;
+        (bootCacheBuilder.classes == undefined).should.be.true;
       });
 
       it('should store in the cache', function(){

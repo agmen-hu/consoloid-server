@@ -1,8 +1,7 @@
-var should = require("should");
-
+require('consoloid-framework/Consoloid/Test/UnitTest');
 require('../NoCache.js');
 require('../Cache');
-describe('Consoloid.Server.Cache.Cache', function(){
+describeUnitTest('Consoloid.Server.Cache.Cache', function(){
     var
       env,
       cache;

@@ -1,13 +1,15 @@
-var jsdom = require("jsdom").jsdom;
-global.document = jsdom("<html><head></head><body></body></html>");
-global.window = document.createWindow();
-global.jQuery = global.$ = require('jquery');
+if (!(global.document && global.jQuery && Consoloid && Consoloid.Base && Consoloid.Base.Object)) {
+  var jsdom = require("jsdom").jsdom;
+  global.document = jsdom("<html><head></head><body></body></html>");
+  global.window = document.createWindow();
+  global.jQuery = global.$ = require('jquery');
 
-require('consoloid-framework/Consoloid/Base/jquery/jquery.inherit.min.js');
-require('consoloid-framework/Consoloid/Base/Object');
-require('consoloid-framework/Consoloid/Service/ServiceContainer');
+  require('consoloid-framework/Consoloid/Base/jquery/jquery.inherit.min.js');
+  require('consoloid-framework/Consoloid/Base/Object');
+  require('consoloid-framework/Consoloid/Service/ServiceContainer');
 
-global.jQuery.ready();
+  global.jQuery.ready();
+}
 
 require('consoloid-framework/Consoloid/Base/DeepAssoc');
 require('./Resource/BaseFinder');

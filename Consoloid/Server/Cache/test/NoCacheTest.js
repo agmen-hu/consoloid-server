@@ -1,7 +1,7 @@
-var should = require("should");
+require('consoloid-framework/Consoloid/Test/UnitTest');
 
 require('../NoCache');
-describe('Consoloid.Server.Cache.NoCache', function(){
+describeUnitTest('Consoloid.Server.Cache.NoCache', function(){
     var
       env,
       cache;
@@ -20,7 +20,7 @@ describe('Consoloid.Server.Cache.NoCache', function(){
     describe('#get(key)', function(){
       it('should return nothing', function(){
         cache.store('key', 'value');
-        should.strictEqual(cache.get('key'), undefined);
+        (cache.get('key') == undefined).should.be.true;
       });
     });
 

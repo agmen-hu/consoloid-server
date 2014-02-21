@@ -1,4 +1,4 @@
-var should = require("should");
+require('consoloid-framework/Consoloid/Test/UnitTest');
 
 defineClass('Consoloid.Server.ServerSideContainerTestService', 'Consoloid.Base.Object',
   {
@@ -13,7 +13,7 @@ if (!('ChainedContainer' in Consoloid.Service)) {
   require('consoloid-framework/Consoloid/Service/ChainedContainer');
 }
 require('../ServerSideContainer.js');
-describe('Consoloid.Server.ServerSideContainer', function(){
+describeUnitTest('Consoloid.Server.ServerSideContainer', function(){
   var env;
   var container;
   var definition;

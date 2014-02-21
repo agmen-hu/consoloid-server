@@ -1,7 +1,7 @@
-var should = require("should");
+require('consoloid-framework/Consoloid/Test/UnitTest');
 
 require('../NoBootCacheBuilder');
-describe('Consoloid.Server.Cache.NoBootCacheBuilder', function(){
+describeUnitTest('Consoloid.Server.Cache.NoBootCacheBuilder', function(){
     var
       env,
       bootCacheBuilder;
@@ -56,7 +56,7 @@ describe('Consoloid.Server.Cache.NoBootCacheBuilder', function(){
 
       it('should store nothing', function(){
         bootCacheBuilder[method]('boot');
-        should.strictEqual(bootCacheBuilder[property]);
+        (bootCacheBuilder[property] == undefined).should.be.true;
       })
     }
 
