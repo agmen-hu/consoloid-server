@@ -12,8 +12,11 @@ defineClass('Consoloid.Log.MiniLog', 'Consoloid.Log.Stream.Stream',
       this.logger = this.minilog('app');
 
       if (this.path) {
+        if (this.path.charAt(0) != "/") {
+          this.path = __dirname + '/../../../../' + this.path;
+        }
         this.minilog
-          .pipe(require('fs').createWriteStream(__dirname + '/../../../../' + this.path));
+          .pipe(require('fs').createWriteStream(this.path));
       }
 
       if (this.console) {
