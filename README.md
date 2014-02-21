@@ -1,3 +1,3 @@
-# Consoloid OS module
+# Consoloid Server module
 
 FIXME
