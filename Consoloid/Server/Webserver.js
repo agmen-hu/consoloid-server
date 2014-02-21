@@ -3,7 +3,7 @@ global.document = jsdom("<html><head></head><body></body></html>");
 global.window = document.createWindow();
 global.jQuery = global.$ = require('jquery');
 
-require('consoloid-framework/Consoloid/Base/jquery/jquery.inherit-1.3.2.M.js');
+require('consoloid-framework/Consoloid/Base/jquery/jquery.inherit.min.js');
 require('consoloid-framework/Consoloid/Base/Object');
 require('consoloid-framework/Consoloid/Service/ServiceContainer');
 

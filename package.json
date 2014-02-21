@@ -1,6 +1,6 @@
 {
   "name": "consoloid-server",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "scripts": {
     "start": "node app"
   },
@@ -32,7 +32,10 @@
   "dependencies": {
     "express": "3.1.0",
     "jade": "*",
+    "jsdom": "*",
+    "jquery": "*",
     "js-yaml": "*",
+    "glob": "*",
     "minilog": "*",
     "socket.io" : "*"
   },
