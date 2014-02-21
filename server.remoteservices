@@ -1,0 +1,29 @@
+definitions:
+  logger:
+    cls: Consoloid.Log.BaseLogger
+    shared: true
+    options:
+      levels: "%log.server.levels%"
+      levelName: "%log.server.levelName%"
+      streamServices: "%log.server.streamServices%"
+  server_log_buffer:
+    cls: Consoloid.Log.ServerBuffer
+    shared: true
+    options:
+      interval: "%log.server.bufferSendInterval%"
+      streamServices: [ minilog ]
+    remoting:
+      mode: any
+  minilog:
+    cls: Consoloid.Log.MiniLog
+    options:
+      path: "%log.minilog.filePath%"
+      console: "%log.minilog.consoleEnabled%"
+      format: "%log.minilog.format%"
+  async_rpc_connection_pool:
+    cls: Consoloid.Server.AsyncRPCConnectionPool
+    shared: true
+    options: []
+  async_function_queue:
+    cls: Consoloid.Utility.AsyncFunctionQueue
+    shared: false

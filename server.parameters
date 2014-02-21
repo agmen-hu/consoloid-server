@@ -1,0 +1,114 @@
+server:
+  # Host and port where Consoloid will listen for network connections.
+  #
+  # When host is left undefined, Consoloid will listen on all IPv4
+  # addresses.
+  host: ~
+  port: 3000
+
+  # Set this to true when your Consoloid server is behind a proxy
+  #
+  # See http://expressjs.com/guide.html, "Express behind proxies"
+  # section for details.
+  trustProxy: false
+
+  # Session settings
+  session:
+    # The values given here will be passed to express.session()
+    expressOptions:
+      cookie:
+        httpOnly: false
+
+    # This describes the session store object that will be added to expressOptions
+    store:
+      # Session store class, that will store the sessions
+      cls: "Consoloid.Server.SessionStore"
+      options:
+        # The default consoloid session store requires and instantiates this, then decorates it
+        sourceStore: express/node_modules/connect/lib/middleware/session/memory
+        # These options are added to the source store's constructor
+        sourceOptions: {}
+
+  # Cookie name
+  cookie: consoloid
+
+  # Whether to encrypt connection using HTTPS or not.
+  #
+  # Default is unencrypted (plain HTTP) connection.
+  #
+  # Example configuration for HTTPS connection:
+  # ssl:
+  #   privateKey: path/to/the/key
+  #   certificate: path/to/the/cert
+  ssl: ~
+
+  # Format to use during express logging
+  #
+  # This value will be passed to express.logger()
+  # Specify null to disable express logs in production environment
+  # i.e. logFormat: ~
+  logFormat: 'dev'
+
+# express views settings
+views:
+  engine: jade
+  # Defaults to views directory in project root if exists.
+  # Otherwise its the consoloid-server's module views directory.
+  path: ~
+
+router:
+  # Router class that will be used for handling HTTP requests.
+  cls: Consoloid.Server.Router
+
+  # The topics to load when a client session starts.
+  #
+  # Please note that framework and console topics are loaded anyway.
+  defaultTopics: []
+
+  # Caching configuration
+  #
+  # Cache is disabled by default.
+  cache:
+    cls: Consoloid.Server.Cache.NoCache
+    bootBuilderCls: Consoloid.Server.Cache.NoBootCacheBuilder
+
+resourceLoader:
+  # Class that will be serving resources (js code, templates, service definitions)
+  # to client.
+  cls: Consoloid.Server.Resource.SessionLoader
+
+  # The directories that hold resources (relative to project root).
+  resourceDirectories: [ 'config', 'src/*', 'node_modules/*' ]
+
+  # Directories exported as static directory by express
+  staticDirectories: [ 'public' ]
+
+  # The javascript files appended to the boot content.
+  #
+  # e.g.: Folder/Folder/MyClass
+  # Please note that the extension is not specified
+  externalBootJs: []
+
+log:
+  server:
+    # the level
+    levelName: info
+    # available levels and their order
+    levels:
+      disabled: -1
+      debug: 0
+      info: 3
+      warning: 5
+      error: 7
+    # type of streams where the logger can log
+    streamServices:
+      - server_log_buffer
+    # buffer stream send  interval in milliseconds
+    bufferSendInterval: 40000
+  minilog:
+    # path to the log file
+    filePath: ''
+    # log to the console
+    consoleEnabled: true
+    # log format
+    format: Color

@@ -1,0 +1,46 @@
+{
+  "name": "consoloid-server",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "node app"
+  },
+  "description": "Webserver module for Consoloid",
+  "homepage": "https://github.com/agmen-hu/consoloid-server",
+  "license": "MIT",
+  "author": {
+    "name": "dev.agmen.hu Ltd.",
+    "email": "support@agmen.hu",
+    "url": "https://agmen.hu"
+  },
+  "contributors": [
+    {
+      "name": "Szilard Novaki",
+      "email": "novaki@agmen.hu"
+    },
+    {
+      "name": "Attila Hendrich",
+      "email": "hendricha@agmen.hu"
+    },
+    {
+      "name": "Gabor Kiss",
+      "email": "nevi@agmen.hu"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/agmen-hu/consoloid-server/issues"
+  },
+  "dependencies": {
+    "express": "3.1.0",
+    "jade": "*",
+    "js-yaml": "*",
+    "minilog": "*",
+    "socket.io" : "*"
+  },
+  "engines": {
+    "npm": ">=1.2.0"
+  },
+  "repository" : {
+    "type" : "git",
+    "url" : "git://github.com/agmen-hu/consoloid-server"
+  }
+}
