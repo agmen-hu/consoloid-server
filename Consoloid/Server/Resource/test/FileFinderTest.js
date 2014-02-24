@@ -3,15 +3,16 @@ require('../FileFinder');
 require('consoloid-framework/Consoloid/Test/UnitTest');
 describeUnitTest('Consoloid.Server.Resource.FileFinder', function() {
   var
-    finder;
+    finder,
+    projectPrefix = __dirname + '/../../../../';
 
   beforeEach(function() {
     finder = env.create('Consoloid.Server.Resource.FileFinder', {
       resourceDirectories: [
-        'node_modules/consoloid-server/Consoloid/Server/Resource/test/resources/*',
-        'node_modules/consoloid-server/Consoloid/Server/Resource/test/otherResources/*'
+        'Consoloid/Server/Resource/test/resources/*',
+        'Consoloid/Server/Resource/test/otherResources/*'
       ],
-      projectRoot: __dirname + '/../../../../../../'
+      projectRoot: projectPrefix
     });
   });
 
@@ -31,9 +32,9 @@ describeUnitTest('Consoloid.Server.Resource.FileFinder', function() {
     describe('should make resource directory', function() {
       it('absolute when relative', function() {
         finder.resourceDirectories[0]
-          .should.equal(__dirname + '/../../../../../../node_modules/consoloid-server/Consoloid/Server/Resource/test/resources/*/');
+          .should.equal(projectPrefix + 'Consoloid/Server/Resource/test/resources/*/');
         finder.resourceDirectories[1]
-          .should.equal(__dirname + '/../../../../../../node_modules/consoloid-server/Consoloid/Server/Resource/test/otherResources/*/');
+          .should.equal(projectPrefix + 'Consoloid/Server/Resource/test/otherResources/*/');
       });
 
       it('unchanged when absolute', function() {
@@ -41,7 +42,7 @@ describeUnitTest('Consoloid.Server.Resource.FileFinder', function() {
           resourceDirectories: [
             '/tmp'
           ],
-          projectRoot: __dirname + '/../../../../../../'
+          projectRoot: projectPrefix
         });
 
         finder.resourceDirectories[0].should.equal('/tmp/');
