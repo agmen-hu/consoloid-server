@@ -2,7 +2,8 @@
   "name": "consoloid-server",
   "version": "0.1.4",
   "scripts": {
-    "start": "node app"
+    "start": "node app",
+    "test": "./runtests"
   },
   "description": "Webserver module for Consoloid",
   "homepage": "https://github.com/agmen-hu/consoloid-server",
