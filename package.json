@@ -37,7 +37,8 @@
     "js-yaml": "*",
     "glob": "*",
     "minilog": "*",
-    "socket.io" : "*"
+    "socket.io" : "*",
+    "consoloid-framework": "*"
   },
   "engines": {
     "npm": ">=1.2.0"
