@@ -46,7 +46,7 @@ describeUnitTest('Consoloid.Server.AsyncRPCPeer', function() {
       handler.__registerToPool = sinon.stub();
     });
 
-    it('should atempt to register to pool', function() {
+    it('should attempt to register to pool', function() {
       handler._handleSharedServiceCallRequest(req);
 
       handler.__registerToPool.calledOnce.should.be.ok;
@@ -96,7 +96,7 @@ describeUnitTest('Consoloid.Server.AsyncRPCPeer', function() {
       });
     });
 
-    it('should atempt to register to pool', function() {
+    it('should attempt to register to pool', function() {
       handler._handleServiceCallRequest(req);
 
       handler.__registerToPool.calledOnce.should.be.ok;
