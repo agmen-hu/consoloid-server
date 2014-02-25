@@ -128,6 +128,8 @@ defineClass('Consoloid.Server.Webserver', 'Consoloid.Base.Object',
           }
         );
       }.bind(this));
+
+      console.log('The log will be printed periodically (' + (this.container.get('server_log_buffer').interval/1000) + ' sec)');
     },
 
     __configureExpress: function()
