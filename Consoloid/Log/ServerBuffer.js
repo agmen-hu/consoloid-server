@@ -9,6 +9,8 @@ defineClass('Consoloid.Log.ServerBuffer', 'Consoloid.Log.Stream.PeriodicallyForw
 
       this.getStreamContainerFuncionality();
       this.__appendStreamsFromServices(this.streamServices);
+
+      this.__writeLoggingDelay();
     },
 
     getStreamContainerFuncionality: function()
@@ -17,6 +19,20 @@ defineClass('Consoloid.Log.ServerBuffer', 'Consoloid.Log.Stream.PeriodicallyForw
         streamContainer = getClass('Consoloid.Log.StreamContainer').prototype;
       this.__appendStreamsFromServices = streamContainer.__appendStreamsFromServices;
       this.addStream = streamContainer.addStream;
+    },
+
+    __writeLoggingDelay: function()
+    {
+      var data = {
+          t: new Date().getTime(),
+          l: 'info',
+          m: 'Logging started. Log lines will be delayed due to buffering',
+          p: { delay: this.interval/1000 + ' sec' }
+        }
+
+        this.streams.forEach(function(stream){
+          stream.write(data);
+        });
     },
 
     _forward: function()
