@@ -141,7 +141,7 @@ defineClass('Consoloid.Server.Webserver', 'Consoloid.Base.Object',
         }
         this.application.use(this.express.bodyParser());
         this.application.use(this.express.methodOverride());
-        this.application.use(this.express.cookieParser(this.config.server.cookie));
+        this.application.use(this.express.cookieParser());
         this.application.use(this.express.session(this.config.server.session.expressOptions));
         this.application.use(this.application.router);
 

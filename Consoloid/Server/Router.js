@@ -67,6 +67,7 @@ defineClass('Consoloid.Server.Router', 'Consoloid.Server.Service',
     {
       return {
         baseUrl: req.protocol + '://' + req.header('host') + req.path.replace(/\/+$/, ''),
+        sessionCookie: this.get('webserver').getConfig().server.session.expressOptions.key,
         environment: this.get('webserver').getEnv(),
         defaultTopics: this.__getDefaultTopics(req),
         defaultTemplates: this.get('cache').get('boot/templates')

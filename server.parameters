@@ -16,6 +16,12 @@ server:
   session:
     # The values given here will be passed to express.session()
     expressOptions:
+      # Cookie name
+      key: consoloid
+
+      # Express session secret
+      secret: secret
+
       cookie:
         httpOnly: false
 
@@ -28,9 +34,6 @@ server:
         sourceStore: express/node_modules/connect/lib/middleware/session/memory
         # These options are added to the source store's constructor
         sourceOptions: {}
-
-  # Cookie name
-  cookie: consoloid
 
   # Whether to encrypt connection using HTTPS or not.
   #
