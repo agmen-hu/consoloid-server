@@ -9,7 +9,7 @@ require('consoloid-framework/Consoloid/Test/UnitTest');
 describeUnitTest('Consoloid.Server.AsyncRPCPeer', function() {
   var
     handler,
-    socketMock,
+    socket,
     req;
 
   beforeEach(function() {
@@ -21,35 +21,34 @@ describeUnitTest('Consoloid.Server.AsyncRPCPeer', function() {
       args: []
     }
 
-    socketMock = {
+    socket = {
       emit: sinon.spy(),
       on: sinon.spy(),
       id: 'socket_id'
     };
 
-    defineClass('Consoloid.Server.TestedAsyncRPCPeer', 'Consoloid.Server.AsyncRPCPeer', {
-      _setupListeners: sinon.spy()
-    });
-    handler = env.create('Consoloid.Server.TestedAsyncRPCPeer', {
-      socket: socketMock
+    handler = env.create('Consoloid.Server.AsyncRPCPeer', {
+      socket: socket
     });
   });
 
-  describe('#__construct()', function() {
-    it('should bind events by calling _setUpListeners()', function() {
-      handler._setupListeners.calledOnce.should.be.true;
+  describe('#__constructor()', function() {
+    it('should bind connect.register event on socket', function() {
+      socket.on.callCount.should.equal(6);
+      socket.on.args[5][0].should.equal('connect.register');
     });
   });
 
   describe('#_handleSharedServiceCallRequest(req)', function() {
     beforeEach(function() {
-      handler.__registerToPool = sinon.stub();
     });
 
-    it('should attempt to register to pool', function() {
+    it('should send error when handler is not registered to pool', function() {
       handler._handleSharedServiceCallRequest(req);
-
-      handler.__registerToPool.calledOnce.should.be.ok;
+      socket.emit.calledOnce.should.be.true;
+      socket.emit.args[0][0].should.equal('rpc.result');
+      socket.emit.args[0][1].should.have.property('exception');
+      socket.emit.args[0][1].exception.should.equal('Error: This RPC peer was registered to a different session.');
     });
 
     it('should throw error if request does not include session id', function() {
@@ -65,27 +64,31 @@ describeUnitTest('Consoloid.Server.AsyncRPCPeer', function() {
         callMethodOnService: sinon.spy()
       });
 
+      env.addServiceMock('async_rpc_connection_pool', {
+        addPeerToSession: sinon.stub()
+      });
+
       env.addServiceMock('session_store', {
-        getContainer: sinon.stub().returns({ get: sinon.stub().returns('serviceInstance') })
+        getContainer: sinon.stub().returns(env.container)
       });
 
       env.addServiceMock('testService', {
         asyncMethod: sinon.spy()
       });
 
+      handler._registerToPool({ sessionID: 'session_id' });
+
       handler._handleSharedServiceCallRequest(req);
 
       env.container.get('router').callMethodOnService.calledOnce.should.be.true;
       env.container.get('router').callMethodOnService.args[0][0].should.equal('testService');
-      (env.container.get('router').callMethodOnService.args[0][1] instanceof Consoloid.Server.AsyncRPCRequest).should.be.ok;
-      env.container.get('router').callMethodOnService.args[0][2].should.equal('serviceInstance');
+      (env.container.get('router').callMethodOnService.args[0][1] instanceof Consoloid.Server.AsyncRPCRequest).should.be.true;
     });
   });
 
   describe('#_handleServiceCallRequest(req)', function() {
     beforeEach(function() {
       req.instanceId = 12;
-      handler.__registerToPool = sinon.stub();
 
       env.addServiceMock('router', {
         callServiceInstance: sinon.mock()
@@ -94,15 +97,25 @@ describeUnitTest('Consoloid.Server.AsyncRPCPeer', function() {
       env.addServiceMock('testService', {
         asyncMethod: sinon.spy()
       });
+
+      env.addServiceMock('async_rpc_connection_pool', {
+        addPeerToSession: sinon.stub()
+      });
+
+      env.addServiceMock('session_store', {
+        getContainer: sinon.stub().returns(env.container)
+      });
     });
 
-    it('should attempt to register to pool', function() {
-      handler._handleServiceCallRequest(req);
-
-      handler.__registerToPool.calledOnce.should.be.ok;
+    it('should throw when handler is not registered to pool', function() {
+      (function() {
+        handler._handleServiceCallRequest(req);
+      }).should.throw('This RPC peer was registered to a different session.');
     });
 
     it('should throw error when the request does not contain required arguments', function() {
+      handler._registerToPool({ sessionID: 'session_id' });
+
       (function() {
         handler._handleServiceCallRequest(
           { callId: 1 }
@@ -129,6 +142,7 @@ describeUnitTest('Consoloid.Server.AsyncRPCPeer', function() {
     });
 
     it('should call service method using Router::callMethodOnService method', function() {
+      handler._registerToPool({ sessionID: 'session_id' });
       handler._handleServiceCallRequest(req);
 
       env.container.get('router').callServiceInstance.calledOnce.should.be.true;
@@ -141,35 +155,47 @@ describeUnitTest('Consoloid.Server.AsyncRPCPeer', function() {
     });
   });
 
-  describe('#__registerToPool(sessionID)', function() {
+  describe('#_registerToPool(req)', function() {
     var
       pool;
+
     beforeEach(function() {
       pool = {
         addPeerToSession: sinon.stub()
       }
       env.addServiceMock('async_rpc_connection_pool', pool);
+
+      env.addServiceMock('session_store', {
+        getContainer: sinon.stub().returns(env.container)
+      });
     });
 
     it("should register itself to the pool according to session and socket id on first request", function() {
-      handler.__registerToPool('session_id');
+      handler._registerToPool({ sessionID: 'session_id' });
 
-      pool.addPeerToSession.calledOnce.should.be.ok;
+      pool.addPeerToSession.calledOnce.should.be.true;
       pool.addPeerToSession.args[0][0].should.equal('session_id');
       pool.addPeerToSession.args[0][1].should.equal('socket_id');
 
-      handler.__registerToPool('session_id');
-      handler.__registerToPool('session_id');
-      pool.addPeerToSession.calledOnce.should.be.ok;
+      handler._registerToPool({ sessionID: 'session_id' });
+      handler._registerToPool({ sessionID: 'session_id' });
+      pool.addPeerToSession.calledOnce.should.be.true;
     });
 
-    it("should throw on new sessionID when it's not the first request", function() {
-      handler.__registerToPool('session_id');
+    it("should throw error when trying to re-register a different session id", function() {
+      handler._registerToPool({ sessionID: 'session_id' });
 
-      req.sessionID = 'something_id';
       (function() {
-        handler._validateSharedCallRequest('session_id');
-      }).should.throwError()
+        handler._registerToPool({ sessionID: 'other_session_id' });
+      }).should.throwError('This RPC peer was registered to a different session.');
     });
+
+    it("should register peer as async_rpc_handler_server service in the container", function() {
+      (env.container.has('async_rpc_handler_server') || false).should.be.false;
+
+      handler._registerToPool({ sessionID: 'session_id' });
+
+      env.container.get('async_rpc_handler_server').should.equal(handler);
+    })
   });
 });
