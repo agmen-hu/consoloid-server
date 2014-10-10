@@ -1,7 +1,7 @@
 if (!(global.document && global.jQuery && Consoloid && Consoloid.Base && Consoloid.Base.Object)) {
   var jsdom = require("jsdom").jsdom;
   global.document = jsdom("<html><head></head><body></body></html>");
-  global.window = document.createWindow();
+  global.window = document.parentWindow;
   global.jQuery = global.$ = require('jquery');
 
   require('consoloid-framework/Consoloid/Base/jquery/jquery.inherit.min.js');
